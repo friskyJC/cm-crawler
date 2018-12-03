@@ -14,4 +14,5 @@ class ToscrapeItem(scrapy.Item):
     text = scrapy.Field()
     author = scrapy.Field()
     tags = scrapy.Field()
+    token = scrapy.Field()
     pass

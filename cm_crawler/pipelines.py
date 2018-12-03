@@ -5,8 +5,11 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-import pymongo
 from urllib import parse
+
+import pymongo
+from scrapy.exceptions import DropItem
+
 
 class CmCrawlerPipeline(object):
     def process_item(self, item, spider):
@@ -34,5 +37,10 @@ class MongodbPipeline(object):
 
     def process_item(self, item, spider):
         collection_name = item.__class__.__name__
-        self.db[collection_name].insert(dict(item))
+        # 去重
+        cnt = self.db[collection_name].count({'token': item['token']})
+        if cnt > 0:
+            raise DropItem('already exist!')
+        else:
+            self.db[collection_name].insert(dict(item))
         return item

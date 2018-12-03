@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+from cm_crawler.common import utility
 from cm_crawler.items import ToscrapeItem
 
 class ToscrapeSpiderXPath(scrapy.Spider):
@@ -18,6 +19,7 @@ class ToscrapeSpiderXPath(scrapy.Spider):
                 './/small[@class="author"]/text()').extract_first()
             item['tags'] = quote.xpath(
                 './/div[@class="tags"]/a[@class="tag"]/text()').extract()
+            item['token'] = utility.gen_md5_token(item['text'])
             yield item
 
         # for quote in response.css("div.quote"):
